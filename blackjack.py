@@ -66,17 +66,17 @@ class CPU(object):
                 t += 1
             else:
                 if inicio.pontuacao > 21:
-                    print("Voce perdeu, estourou a pontuação")
+                    print("Voce ganhou, A casa estourou a pontuação")
 
-                    print("Sua pontuação é de: ", inicio.pontuacao)
+                    print("Pontuação da CPU é de: ", inicio.pontuacao)
                     break
                 else:
-                    print("Sua pontuação é de: ", inicio.pontuacao)
-                    mais_carta_cpu = input("Mais uma carta? S/N ").upper()
-                    if mais_carta_cpu == "S":
+                    print("Pontuação da CPU é de: ", inicio.pontuacao)
+
+                    if inicio.pontuacao < inicio.result:
                         t = 1
                     else:
-                        print("Sua pontuação é de: ", inicio.pontuacao)
+                        print("Pontuação da CPU é de: ", inicio.pontuacao)
                         break
 
 
@@ -96,38 +96,40 @@ class Aposta(object):
         self.caixa -= valor2
 
 
-inicio = Baralho()
-cartas = inicio.todas_cartas()
-i = 0
-while len(cartas) >= 1:
-    if len(cartas) == 52:
-        apostar = Aposta()
-        while True:
-            valor = input("Deseja apostar quanto? ").isnumeric()
-            if valor > apostar.caixa and type(valor) == int:
-                print("Saldo insuficiente")
-            else:
-                break
-    if i < 2:
-        print(cartas[0])
-        inicio.soma_cartas(inicio.pega_carta(cartas))
-        i += 1
-    else:
-        if inicio.pontuacao > 21:
-            print("Voce perdeu, estourou a pontuação")
-
-            print("Sua pontuação é de: ", inicio.pontuacao)
-            break
+while True:
+    inicio = Baralho()
+    cartas = inicio.todas_cartas()
+    i = 0
+    while len(cartas) >= 1:
+        if len(cartas) == 52:
+            apostar = Aposta()
+            while True:
+                valor = input("Deseja apostar quanto? ").isnumeric()
+                if valor > apostar.caixa and type(valor) == int:
+                    print("Saldo insuficiente")
+                else:
+                    break
+        if i < 2:
+            print(cartas[0])
+            inicio.soma_cartas(inicio.pega_carta(cartas))
+            i += 1
         else:
-            print("Sua pontuação é de: ", inicio.pontuacao)
-            maisCarta = input("Mais uma carta? S/N ").upper()
-            if maisCarta == "S":
-                i = 1
-            else:
+            if inicio.pontuacao > 21:
+                print("Voce perdeu, estourou a pontuação")
+
                 print("Sua pontuação é de: ", inicio.pontuacao)
                 break
-inicio.guarda_resultado(inicio.pontuacao)
-inicio.pontuacao = 0
-play = CPU(cartas)
-play.jogada()
-
+            else:
+                print("Sua pontuação é de: ", inicio.pontuacao)
+                maisCarta = input("Mais uma carta? S/N ").upper()
+                if maisCarta == "S":
+                    i = 1
+                else:
+                    print("Sua pontuação é de: ", inicio.pontuacao)
+                    break
+    inicio.guarda_resultado(inicio.pontuacao)
+    inicio.pontuacao = 0
+    play = CPU(cartas)
+    play.jogada()
+    if input("Deseja parar?").upper() == 'S':
+        break
