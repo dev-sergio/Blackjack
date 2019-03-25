@@ -56,9 +56,13 @@ class CPU(object):
         self.cartas = lista
         pass
 
-    def jogada(self):
+    def jogada(self, apostar):
         t = 0
         inicio.pega_carta(self.cartas)
+        print()
+        print("________________________________________________")
+        print("Vez da CPU")
+        print()
         while len(cartas) >= 1:
             if t < 2:
                 print(cartas[0])
@@ -67,13 +71,14 @@ class CPU(object):
             else:
                 if inicio.pontuacao > 21:
                     print("Voce ganhou, A casa estourou a pontuação")
+                    apostar.credito(valor)
 
                     print("Pontuação da CPU é de: ", inicio.pontuacao)
                     break
                 else:
                     print("Pontuação da CPU é de: ", inicio.pontuacao)
 
-                    if inicio.pontuacao < inicio.result:
+                    if inicio.pontuacao <= inicio.result:
                         t = 1
                     else:
                         print("Pontuação da CPU é de: ", inicio.pontuacao)
@@ -82,29 +87,29 @@ class CPU(object):
 
 class Aposta(object):
     caixa = 10000
-
     def __init__(self):
         if self.caixa <= 0:
             print("Fim de jogo")
         else:
             print("Seu caixa é de: ", self.caixa)
 
-    def deposito(self, valor1):
+    def credito(self, valor1):
         self.caixa += valor1
 
     def debito(self, valor2):
         self.caixa -= valor2
 
-
+apostar = Aposta()
 while True:
+    print("É sua vez de jogar")
     inicio = Baralho()
     cartas = inicio.todas_cartas()
     i = 0
     while len(cartas) >= 1:
         if len(cartas) == 52:
-            apostar = Aposta()
             while True:
-                valor = input("Deseja apostar quanto? ").isnumeric()
+                apostar.__init__()
+                valor = int(input("Deseja apostar quanto? "))
                 if valor > apostar.caixa and type(valor) == int:
                     print("Saldo insuficiente")
                 else:
@@ -115,9 +120,9 @@ while True:
             i += 1
         else:
             if inicio.pontuacao > 21:
-                print("Voce perdeu, estourou a pontuação")
-
                 print("Sua pontuação é de: ", inicio.pontuacao)
+                print("Voce perdeu, estourou a pontuação")
+                apostar.debito(valor)
                 break
             else:
                 print("Sua pontuação é de: ", inicio.pontuacao)
@@ -125,11 +130,16 @@ while True:
                 if maisCarta == "S":
                     i = 1
                 else:
+                    print()
                     print("Sua pontuação é de: ", inicio.pontuacao)
                     break
-    inicio.guarda_resultado(inicio.pontuacao)
-    inicio.pontuacao = 0
-    play = CPU(cartas)
-    play.jogada()
+    if inicio.pontuacao < 21:
+        inicio.guarda_resultado(inicio.pontuacao)
+        inicio.pontuacao = 0
+        play = CPU(cartas)
+        play.jogada(apostar)
+        apostar.debito(valor)
+
     if input("Deseja parar?").upper() == 'S':
         break
+      
