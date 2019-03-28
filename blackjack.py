@@ -71,7 +71,7 @@ class CPU(object):
             else:
                 if inicio.pontuacao > 21:
                     print("Voce ganhou, A casa estourou a pontuação")
-                    apostar.credito(valor)
+                    apostar.mais(valor)
 
                     print("Pontuação da CPU é de: ", inicio.pontuacao)
                     break
@@ -81,7 +81,8 @@ class CPU(object):
                     if inicio.pontuacao <= inicio.result:
                         t = 1
                     else:
-                        print("Pontuação da CPU é de: ", inicio.pontuacao)
+                        print("Voce perdeu, A casa fez uma pontuação melhor")
+                        
                         break
 
 
@@ -93,10 +94,10 @@ class Aposta(object):
         else:
             print("Seu caixa é de: ", self.caixa)
 
-    def credito(self, valor1):
+    def mais(self, valor1):
         self.caixa += valor1
 
-    def debito(self, valor2):
+    def menos(self, valor2):
         self.caixa -= valor2
 
 apostar = Aposta()
@@ -122,7 +123,7 @@ while True:
             if inicio.pontuacao > 21:
                 print("Sua pontuação é de: ", inicio.pontuacao)
                 print("Voce perdeu, estourou a pontuação")
-                apostar.debito(valor)
+                apostar.menos(valor)
                 break
             else:
                 print("Sua pontuação é de: ", inicio.pontuacao)
@@ -138,8 +139,6 @@ while True:
         inicio.pontuacao = 0
         play = CPU(cartas)
         play.jogada(apostar)
-        apostar.debito(valor)
 
     if input("Deseja parar?").upper() == 'S':
         break
-      
